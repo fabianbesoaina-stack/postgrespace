@@ -1,0 +1,23 @@
+{
+  "name": "Entorno Educativo Postgres",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+  
+  // Instala PostgreSQL y dependencias al crear el contenedor
+  "features": {
+    "ghcr.io/devcontainers/features/sshd:1": {}
+  },
+  
+  // Ejecuta comandos justo después de que el contenedor se ha creado
+  "postCreateCommand": "sudo apt-get update && sudo apt-get install -y postgresql && sudo service postgresql start && sudo -u postgres psql -c \"ALTER USER postgres PASSWORD '1234';\" && curl -fsS https://www.pgadmin.org/static/packages_pgadmin_org.pub | sudo gpg --dearmor -o /usr/share/keyrings/pgadmin-archive-keyring.gpg && echo \"deb [signed-by=/usr/share/keyrings/pgadmin-archive-keyring.gpg] https://ftp.postgresql.org/pub/pgadmin/pgadmin4/apt/$(lsb_release -cs) pgadmin4 main\" | sudo tee /etc/apt/sources.list.d/pgadmin4.list && sudo apt-get update && sudo apt-get install -y pgadmin4-web && sudo /usr/pgadmin4/venv/bin/python3 /usr/pgadmin4/web/setup.py setup-db --email alumno@postgres.com --password 1234",
+
+  // Asegura que los puertos de Postgres (5432) y pgAdmin (por defecto 5050 o el que uses) se expongan
+  "forwardPorts": [5432, 5050],
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ckinfinite.postgresql"
+      ]
+    }
+  }
+}
