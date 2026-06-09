@@ -1,10 +1,7 @@
 {
   "name": "PostgreSQL Curso",
-
   "workspaceFolder": "/workspaces/postgrespace",
-
   "dockerComposeFile": "docker-compose.yml",
-
   "service": "workspace",
 
   "runServices": [
@@ -14,11 +11,11 @@
 
   "forwardPorts": [
     5432,
-    80
+    5050
   ],
 
   "portsAttributes": {
-    "80": {
+    "5050": {
       "label": "pgAdmin",
       "onAutoForward": "openBrowser"
     }

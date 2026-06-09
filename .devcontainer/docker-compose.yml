@@ -13,6 +13,8 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 1234
       POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
 
   pgadmin:
     image: dpage/pgadmin4:latest
@@ -21,3 +23,5 @@ services:
       PGADMIN_DEFAULT_EMAIL: alumno@postgres.com
       PGADMIN_DEFAULT_PASSWORD: 1234
       PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "5050:80"
