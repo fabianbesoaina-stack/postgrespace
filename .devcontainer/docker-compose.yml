@@ -1,10 +1,16 @@
 version: '3.8'
 
+networks:
+  pgnet:
+    driver: bridge
+
 services:
 
   workspace:
     image: mcr.microsoft.com/devcontainers/base:ubuntu
     command: sleep infinity
+    networks:
+      - pgnet
 
   postgres:
     image: postgres:16
@@ -26,6 +32,8 @@ services:
       # pg_hba.conf personalizado: permite conexiones desde cualquier host
       # Docker sin depender del pg_hba.conf generado en pgdta.
       - ./pg_hba.conf:/etc/postgresql/pg_hba.conf
+    networks:
+      - pgnet
 
   pgadmin:
     image: dpage/pgadmin4:latest
@@ -45,3 +53,5 @@ services:
       # y como ese path ya existe como mount point, no intenta crearlo ni hacerle chmod 700.
       # Resultado: los archivos quedan en data/ sin subcarpeta intermedia.
       - ../data:/var/lib/pgadmin/storage/postgres_sql.dev
+    networks:
+      - pgnet
