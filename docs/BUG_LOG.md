@@ -134,6 +134,43 @@ Si el Codespace ya tiene datos en `pgdta/`, `veterinariadb` seguirá existente e
 
 ---
 
+## Bug 4 — `FATAL: could not open file "global/pg_filenode.map": Permission denied`
+
+**Estado: RESUELTO**
+
+### Síntoma
+
+Al intentar conectar desde pgAdmin, el diálogo mostraba:
+```
+connection failed: connection to server at "172.18.0.2", port 5432 failed:
+FATAL: could not open file "global/pg_filenode.map": Permission denied
+```
+
+### Causa
+
+El bind mount `../pgdta:/var/lib/postgresql/data` causaba un desajuste de UID en Codespaces con `docker-outside-of-docker`. Cuando el container postgres (uid 999) escribía archivos en ese directorio, el sistema de archivos del Codespace los registraba como propiedad de uid 1000 (el usuario `vscode`). Al leerlos de vuelta desde el container, postgres (uid 999) no tenía permiso de lectura sobre sus propios archivos.
+
+### Solución aplicada
+
+Eliminar completamente el bind mount de `pgdta/` del servicio postgres en [docker-compose.yml](../.devcontainer/docker-compose.yml). Sin bind mount, Docker crea un volumen anónimo gestionado internamente donde PostgreSQL inicializa sus archivos con los permisos correctos (uid 999). Los scripts de `initdb` siguen funcionando porque el volumen anónimo comienza vacío.
+
+```yaml
+# Antes (causaba el bug):
+volumes:
+  - ../pgdta:/var/lib/postgresql/data  # ← ELIMINADO
+  - ./initdb:/docker-entrypoint-initdb.d
+  - ./pg_hba.conf:/etc/postgresql/pg_hba.conf
+
+# Después:
+volumes:
+  - ./initdb:/docker-entrypoint-initdb.d
+  - ./pg_hba.conf:/etc/postgresql/pg_hba.conf
+```
+
+El directorio `pgdta/` también fue eliminado del proyecto.
+
+---
+
 ## Estado general del entorno
 
 | Componente | Estado |
@@ -143,3 +180,4 @@ Si el Codespace ya tiene datos en `pgdta/`, `veterinariadb` seguirá existente e
 | `veterinariadb` + tabla `tutores` | Creada con datos de ejemplo |
 | pgAdmin 4 | Corriendo en puerto 5050 |
 | Conexión pgAdmin → postgres | Automática sin popup de contraseña (pgpassfile) |
+| Volumen postgres | Anónimo (gestionado por Docker, sin bind mount) |

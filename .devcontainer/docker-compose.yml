@@ -23,14 +23,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      # Persistencia del data directory (gitignored, NO se commitea).
-      # La primera vez que está vacío, se ejecutan los scripts de initdb.
-      - ../pgdta:/var/lib/postgresql/data
-      # Scripts de inicialización automática (commiteados). Solo corren
-      # cuando el data directory está vacío -> crean la DB de ejemplo.
       - ./initdb:/docker-entrypoint-initdb.d
-      # pg_hba.conf personalizado: permite conexiones desde cualquier host
-      # Docker sin depender del pg_hba.conf generado en pgdta.
       - ./pg_hba.conf:/etc/postgresql/pg_hba.conf
     networks:
       - pgnet

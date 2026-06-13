@@ -1,4 +1,1 @@
-# Data directory de PostgreSQL: se regenera solo desde .devcontainer/initdb/.
-# No se commitea (binario, pesado, atado a versión y permisos).
-# Docker crea la carpeta vacía en el primer arranque.
-/pgdta/
+
