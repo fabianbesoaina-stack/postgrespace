@@ -17,6 +17,11 @@ SELECT especie, COUNT(*) AS cantidad
 FROM mascotas
 GROUP BY especie
 ORDER BY cantidad DESC;
+-- SELECT (AVG(COSTO), 2) AS FROM GROUP BY  ORDER BY DESC  --- CALCULA EL COSTO PROMEDIO POR CADA MASCOTA  (mascota_id)
+SELECT mascota_id, ROUND(AVG(costo), 2) AS promedio
+FROM consultas_veterinarias
+GROUP BY mascota_id
+ORDER BY promedio DESC;
 
 
 
