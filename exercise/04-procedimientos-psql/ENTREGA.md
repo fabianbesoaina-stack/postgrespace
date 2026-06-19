@@ -8,7 +8,7 @@ Para cada ejercicio entregarás entre **2 y 3 archivos** según el tipo de paso.
 
 | Ejercicio | Archivos a entregar | Contenido clave |
 |---|---|---|
-| **Paso 1** | `paso1.txt` + `paso1.png` | Output de terminal (pg_dump + verificación) y captura de los 4 conteos correctos |
+| **Paso 1** | `paso1.txt` + `paso1.png` | Output de terminal (pg_dump + restauración + permisos) y captura del `ERROR: permission denied` al intentar insertar como `recepcionista` |
 | **Paso 2** | `paso2.sql` + `paso2.png` | Las 3 funciones (`costo_total_tutor`, `resumen_tutor`, `mascotas_sin_consulta`) y captura de `resumen_tutor(1)` |
 | **Paso 3** | `paso3.sql` + `paso3.txt` + `paso3.png` | Procedimiento completo (con ampliación 3.5), output de psql de los comandos 3.4, y captura de las dos tablas con filas insertadas |
 
