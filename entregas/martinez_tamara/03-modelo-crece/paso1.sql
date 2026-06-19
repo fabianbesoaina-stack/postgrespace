@@ -28,3 +28,11 @@ UPDATE consultas_veterinarias SET veterinario_id = 3 WHERE id_consulta = 6;
 SELECT COUNT(*) AS sin_veterinario
 FROM consultas_veterinarias
 WHERE veterinario_id IS NULL;
+---  Ponle reglas de calidad: CHECK y DEFAULT --CHECK obliga a que una columna cumpla una condición. El costo nunca debería ser negativo:
+ALTER TABLE consultas_veterinarias
+ADD CONSTRAINT chk_costo_positivo CHECK (costo >= 0);
+--- DEFAULT da un valor automático cuando no se especifica. Agreguemos si la consulta está pagada, que por defecto sea "no":
+ALTER TABLE consultas_veterinarias
+ADD COLUMN pagada BOOLEAN DEFAULT false;
+
+
