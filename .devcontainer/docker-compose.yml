@@ -33,14 +33,19 @@ services:
     environment:
       PGADMIN_DEFAULT_EMAIL: postgres@sql.dev
       PGADMIN_DEFAULT_PASSWORD: 1234
-      # Modo escritorio: pgAdmin no pide login, asi que no hay sesion ni cookie.
-      # Esto elimina de raiz el bug del proxy HTTPS de Codespaces: al terminar
-      # el SSL en el proxy, pgAdmin (que internamente ve HTTP) generaba la
-      # cookie de login invalida y las XHR autenticadas (preferences/get_all,
-      # misc/bgprocess, status...) devolvian 401 -> pagina en blanco. En un
-      # laboratorio de un solo usuario local no hace falta el modo servidor.
+      # Modo escritorio: pgAdmin no pide login (lab de un solo usuario local).
       PGADMIN_CONFIG_SERVER_MODE: "False"
       PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
+      # pgAdmin corre detras del proxy de Codespaces, que TERMINA el TLS y le
+      # reenvia por HTTP. Sin esto pgAdmin cree que la peticion es HTTP, genera
+      # mal la cookie de sesion/URLs y las XHR autenticadas (preferences/get_all,
+      # misc/bgprocess, status...) dan 401 -> pagina en blanco (los estaticos si
+      # cargan, por eso 200). Estas variables activan el ProxyFix: pgAdmin confia
+      # en las cabeceras X-Forwarded-* del proxy (1 salto) y reconstruye el
+      # esquema (https) y host reales.
+      PGADMIN_CONFIG_PROXY_X_PROTO_COUNT: 1
+      PGADMIN_CONFIG_PROXY_X_HOST_COUNT: 1
+      PGADMIN_CONFIG_PROXY_X_PREFIX_COUNT: 1
     ports:
       - "5050:80"
     volumes:
